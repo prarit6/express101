@@ -3,8 +3,18 @@ import users from "./routes/user.js";
 import products from "./routes/product.js";
 import logger from "./middleware/logger.js";
 
+
 //Import json and urlencoded middleware from express
 import { json } from "express";
+
+import mongoose from "mongoose";
+
+mongoose
+  .connect(
+    "mongodb+srv://admin:1234@cluster0.x2c9g4r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+  )
+  .then(() => console.log("DB Connected!"))
+  .catch((err) => console.error(err));
 
 // Create an instance of an Express application
 const app = express();
