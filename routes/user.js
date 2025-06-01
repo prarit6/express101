@@ -1,21 +1,12 @@
-import express from "express";
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from "../controller/userController.js";
+import express from "express"
+import authMiddleware from "../middleware/auth.js";
+import requireAdmin from "../middleware/require_role.js";
+import { createUser, loginUser, deleteUser } from "../controller/userController.js";
 
-const users = express.Router();
+const users = express.Router()
 
-//Get all users
-users.get("/", getAllUsers);
-
-//Get user by ID
-users.get("/:id", getUserById);
-
-//Create a new user
-users.post("/", createUser)
-
-//Update user by ID
-users.put("/:id", updateUser);
-
-//Delete user by ID
-users.delete("/:id", deleteUser);
+users.delete("/:id", authMiddleware, requireAdmin, deleteUser);
+users.post("/register", createUser)
+users.post("/login", loginUser);
 
 export default users;

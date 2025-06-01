@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
     {
-        prod_name : String,
-        prod_price : Number,
+        prod_name : {type : String, require: true},
+        prod_price : {type : Number, require: false, default: 0},
         updated_at : {type: Date, default: Date.now}
     }
 )

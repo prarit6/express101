@@ -1,17 +1,17 @@
 import express from "express";
-import users from "./routes/user.js";
 import products from "./routes/product.js";
+import users from "./routes/user.js"
 import logger from "./middleware/logger.js";
 
-
-//Import json and urlencoded middleware from express
+//Import json middleware from express
 import { json } from "express";
-
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 mongoose
   .connect(
-    "mongodb+srv://admin:1234@cluster0.x2c9g4r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    process.env.MONGO_URL,
   )
   .then(() => console.log("DB Connected!"))
   .catch((err) => console.error(err));
@@ -19,7 +19,7 @@ mongoose
 // Create an instance of an Express application
 const app = express();
 //Define the port on which the server will listen
-const port = 3000;
+const port = process.env.PORT;
 
 //Middleware to parse JSON body
 app.use(json());
@@ -33,8 +33,8 @@ app.get("/", (req, res) => {
 });
 
 //Set static folder
-app.use("/api/users", users);
 app.use("/api/products", products);
+app.use("/api/users", users);
 
 //Server listening on the specified port
 app.listen(port, () => {
