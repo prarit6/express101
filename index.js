@@ -1,20 +1,15 @@
 import express from "express";
 import products from "./routes/product.js";
-import users from "./routes/user.js"
+import users from "./routes/user.js";
 import logger from "./middleware/logger.js";
+import connectDB from "./config/database.js";
 
 //Import json middleware from express
 import { json } from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-mongoose
-  .connect(
-    process.env.MONGO_URL,
-  )
-  .then(() => console.log("DB Connected!"))
-  .catch((err) => console.error(err));
+connectDB();
 
 // Create an instance of an Express application
 const app = express();
