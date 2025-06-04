@@ -2,11 +2,21 @@ import productModel from "../models/productModel.js";
 
 async function getAllProducts(req, res) {
   try {
-    const getProducts = await productModel.find()
+    const limit = parseInt(req.query.limit) || 2;
+    const after_id = req.query.after_id;
+
+    const query = after_id ? { _id: { $gt: after_id}} : {};
+    const getProducts = await productModel.find(query).limit(limit).sort({ _id: 1})
+
+    const productMore = getProducts.length === limit;
+    const nextAfterId = productMore ? getProducts[getProducts.length - 1]._id : null;
+
     res.status(201).json({
       status: "Success",
       code: "GET_ALL_PRODUCT",
-      data: getProducts})
+      data: getProducts,
+      next_product: nextAfterId,
+    })
   } catch (err) {
     res.status(404).json(
       {
