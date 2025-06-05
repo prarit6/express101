@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middleware/auth.js";
+import passportAuthMiddleware from "../middleware/passportAuth.js";
 import requireAdmin from "../middleware/require_role.js";
 import {
   getAllUsers,
@@ -9,8 +9,9 @@ import {
 } from "../controller/userController.js";
 
 const users = express.Router();
-users.get("/", authMiddleware, requireAdmin, getAllUsers);
-users.delete("/:id", authMiddleware, requireAdmin, deleteUser);
+users.get("/", passportAuthMiddleware, requireAdmin, getAllUsers);
+
+users.delete("/:id", passportAuthMiddleware, requireAdmin, deleteUser);
 users.post("/register", createUser);
 users.post("/login", loginUser);
 

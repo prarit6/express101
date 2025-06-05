@@ -1,6 +1,4 @@
 function requireAdmin(req, res, next) {
-  console.log("user:", req.user);
-  console.log("ADMIN_USERNAME:", process.env.ADMIN_USERNAME);
   if (req.user && req.user.email === process.env.ADMIN_USERNAME) {
     return next();
   }

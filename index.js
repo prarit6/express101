@@ -6,8 +6,6 @@ import connectDB from "./config/database.js";
 
 //Import json middleware from express
 import { json } from "express";
-import dotenv from "dotenv";
-dotenv.config();
 
 connectDB();
 
