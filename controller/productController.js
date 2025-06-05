@@ -2,20 +2,24 @@ import productModel from "../models/productModel.js";
 
 async function getAllProducts(req, res) {
   try {
-    const limit = parseInt(req.query.limit) || 2;
-    const after_id = req.query.after_id;
+    const page = parseInt(req.query.page) || 1; //Default page is 1 if not provided
+    const skip = (page - 1) * 5; // 5 products per page
+    const limit = parseInt(req.query.limit) || 5;
 
-    const query = after_id ? { _id: { $gt: after_id}} : {};
-    const getProducts = await productModel.find(query).limit(limit).sort({ _id: 1})
+    const totalProducts = await productModel.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
 
-    const productMore = getProducts.length === limit;
-    const nextAfterId = productMore ? getProducts[getProducts.length - 1]._id : null;
+    const getProducts = await productModel.find()
+      .skip(skip)
+      .limit(limit)
 
     res.status(201).json({
       status: "Success",
       code: "GET_ALL_PRODUCT",
-      data: getProducts,
-      next_product: nextAfterId,
+      products: totalProducts,
+      pages: totalPages,
+      current_page: page,
+      get_products: getProducts,
     })
   } catch (err) {
     res.status(404).json(

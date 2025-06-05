@@ -4,22 +4,24 @@ import bcrypt from "bcrypt";
 
 async function getAllUsers(req, res) {
   try {
-    const limit = parseInt(req.query.limit) || 5; //limit data = 5
-    const after_id = req.query.after_id; // after_id is the last id of the previous data
+    const page = parseInt(req.query.page) || 1;
+    const limit  = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * 5;
+    
+    const totalUsers = await usersModel.countDocuments();
+    const totalPages = Math.ceil(totalUsers / limit);
+    const getUsers =  await usersModel.find().limit(limit).skip(skip)
 
-    const query = after_id ? { _id: { $gt: after_id } } : {}; // ? after_id is provide, get data after that id : get all data
-
-    const users = await usersModel.find(query).limit(limit).sort({ _id: 1 }); // find users with query, limit 5 data, sort by id
-    const hashMore = users.length === limit; // ? length = limit, more users to fetch : no more users to fetch
-    const nextAfterId = hashMore ? users[users.length - 1]._id : null; // ? get last id users : no next id get null
+   
 
     res.status(200).json({
       status: "Success",
       code: "GET_ALL_USERS",
       message: "Get all users success",
-      data: users,
-      hasMore: hashMore,
-      nextAfterId: nextAfterId,
+      users: totalUsers,
+      pages: totalPages,
+      current_page: page,
+      data: getUsers,
     });
   } catch (err) {
     console.error("Error fetching users:", err);
