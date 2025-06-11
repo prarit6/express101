@@ -12,7 +12,7 @@ connectDB();
 // Create an instance of an Express application
 const app = express();
 //Define the port on which the server will listen
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 
 //Middleware to parse JSON body
 app.use(json());
