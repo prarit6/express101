@@ -20,6 +20,9 @@ app.use(json());
 //Middleware to log requests
 app.use(logger);
 
+//Middleware to serve static files from the "uploads" directory
+app.use("/uploads", express.static("uploads"));
+
 //Set up a route
 app.get("/", (req, res) => {
   res.send("Hello World!");
